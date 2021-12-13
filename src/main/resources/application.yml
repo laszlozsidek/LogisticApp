@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://host.docker.internal:1433;databaseName=logistic;
+    username: sa
+    password: Werkbl1Q
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServer2012Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    open-in-view: false
+mvc:
+  format:
+    date-time: yyyy-MM-dd HH:mm:ss
+logging:
+  level:
+    org:
+      springframework:
+        security: debug
