@@ -1,10 +1,13 @@
 package hu.webuni.logisticApp.lzsidek.dto;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.validation.constraints.NotEmpty;
 
 public class AddressDto {
     private Long id;
     @NotEmpty
+    @Length(min = 2, max = 2)
     private String countryCode;
     @NotEmpty
     private String city;

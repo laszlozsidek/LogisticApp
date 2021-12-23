@@ -5,16 +5,14 @@ import java.util.List;
 
 public class TransportPlanDto {
     private Long id;
-    private boolean isPlanFulfilled;
-    private int plannedIncome;
+    private double plannedIncome;
     private List<SectionDto> sectionDTOs = new ArrayList<>();
 
     public TransportPlanDto() {
     }
 
-    public TransportPlanDto(Long id, boolean isPlanFulfilled, int plannedIncome, List<SectionDto> sectionDTOs) {
+    public TransportPlanDto(Long id, int plannedIncome, List<SectionDto> sectionDTOs) {
         this.id = id;
-        this.isPlanFulfilled = isPlanFulfilled;
         this.plannedIncome = plannedIncome;
         this.sectionDTOs = sectionDTOs;
     }
@@ -27,19 +25,11 @@ public class TransportPlanDto {
         this.id = id;
     }
 
-    public boolean isPlanFulfilled() {
-        return isPlanFulfilled;
-    }
-
-    public void setPlanFulfilled(boolean planFulfilled) {
-        isPlanFulfilled = planFulfilled;
-    }
-
-    public int getPlannedIncome() {
+    public double getPlannedIncome() {
         return plannedIncome;
     }
 
-    public void setPlannedIncome(int plannedIncome) {
+    public void setPlannedIncome(double plannedIncome) {
         this.plannedIncome = plannedIncome;
     }
 

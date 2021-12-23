@@ -11,8 +11,7 @@ public class TransportPlan {
     @Id
     @GeneratedValue
     private Long id;
-    private boolean isPlanFulfilled;
-    private int plannedIncome;
+    private double plannedIncome;
     @OneToMany(mappedBy = "transportPlan")
     private List<Section> sections;
 
@@ -24,19 +23,11 @@ public class TransportPlan {
         this.id = id;
     }
 
-    public boolean isPlanFulfilled() {
-        return isPlanFulfilled;
-    }
-
-    public void setPlanFulfilled(boolean planFulfilled) {
-        isPlanFulfilled = planFulfilled;
-    }
-
-    public int getPlannedIncome() {
+    public double getPlannedIncome() {
         return plannedIncome;
     }
 
-    public void setPlannedIncome(int plannedIncome) {
+    public void setPlannedIncome(double plannedIncome) {
         this.plannedIncome = plannedIncome;
     }
 
