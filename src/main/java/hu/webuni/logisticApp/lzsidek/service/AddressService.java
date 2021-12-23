@@ -1,9 +1,11 @@
 package hu.webuni.logisticApp.lzsidek.service;
 
+import hu.webuni.logisticApp.lzsidek.dto.AddressDto;
 import hu.webuni.logisticApp.lzsidek.model.Address;
 import hu.webuni.logisticApp.lzsidek.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +39,7 @@ public class AddressService {
         addressRepository.deleteById(id);
     }
 
-    public List<Address> findAddressesByExample(Address exampleDto) {
+    public Page<Address> findAddressesByExample(AddressDto exampleDto, Pageable pageable) {
         String countryCode = exampleDto.getCountryCode();
         String city = exampleDto.getCity();
         String postalCode = exampleDto.getPostalCode();
@@ -61,6 +63,6 @@ public class AddressService {
             spec = spec.and(AddressSpecification.hasStreet(street));
         }
 
-        return addressRepository.findAll(spec, Sort.by("id"));
+        return addressRepository.findAll(spec, pageable);
     }
 }

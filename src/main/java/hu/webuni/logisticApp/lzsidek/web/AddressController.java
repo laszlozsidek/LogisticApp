@@ -6,10 +6,13 @@ import hu.webuni.logisticApp.lzsidek.model.Address;
 import hu.webuni.logisticApp.lzsidek.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
@@ -46,8 +49,10 @@ public class AddressController {
     }
 
     @PostMapping("/search")
-    public List<AddressDto> findByExample(@RequestBody AddressDto exampleDto) {
-        return addressMapper.addressesToDTOs(addressService.findAddressesByExample(addressMapper.DTOToAddress(exampleDto)));
+    public List<AddressDto> findByExample(@RequestBody AddressDto exampleDto, Pageable pageable, HttpServletResponse response) {
+        Page<Address> page = addressService.findAddressesByExample(exampleDto, pageable);
+        response.addHeader("X-Total-Count", String.valueOf(page.getTotalElements()));
+        return addressMapper.addressesToDTOs(page.getContent());
     }
 
     @PutMapping("/{id}")
