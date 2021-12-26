@@ -21,3 +21,11 @@ logging:
     org:
       springframework:
         security: debug
+logistic:
+  income:
+    limit1: 30
+    limit2: 60
+    limit3: 120
+    percent1: 2
+    percent2: 5
+    percent3: 10

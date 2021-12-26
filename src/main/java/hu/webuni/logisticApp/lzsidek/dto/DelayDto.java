@@ -1,10 +1,10 @@
 package hu.webuni.logisticApp.lzsidek.dto;
 
-public class TransportPlanBodyDto {
+public class DelayDto {
     private Long milestoneId;
     private int delayInMinutes;
 
-    public TransportPlanBodyDto() {
+    public DelayDto() {
     }
 
     public Long getMilestoneId() {

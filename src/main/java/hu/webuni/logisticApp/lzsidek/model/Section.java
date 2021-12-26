@@ -54,4 +54,15 @@ public class Section {
     public void setTransportPlan(TransportPlan transportPlan) {
         this.transportPlan = transportPlan;
     }
+
+    @Override
+    public String toString() {
+        return "Section{" +
+                "id=" + id +
+                ", fromMilestone=" + fromMilestone +
+                ", toMilestone=" + toMilestone +
+                ", number=" + number +
+                ", transportPlan=" + transportPlan +
+                '}';
+    }
 }

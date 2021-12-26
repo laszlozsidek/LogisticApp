@@ -15,11 +15,12 @@ public class TransportPlanService {
     TransportPlanRepository transportPlanRepository;
 
     @Transactional
-    public TransportPlan saveAddress(TransportPlan transportPlan) {
+    public TransportPlan saveTransportPlan(TransportPlan transportPlan) {
         return transportPlanRepository.save(transportPlan);
     }
 
     public Optional<TransportPlan> getTransportPlanById(Long id) {
         return transportPlanRepository.findById(id);
     }
+
 }
