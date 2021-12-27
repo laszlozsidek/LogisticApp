@@ -7,6 +7,11 @@ public class DelayDto {
     public DelayDto() {
     }
 
+    public DelayDto(Long milestoneId, int delayInMinutes) {
+        this.milestoneId = milestoneId;
+        this.delayInMinutes = delayInMinutes;
+    }
+
     public Long getMilestoneId() {
         return milestoneId;
     }

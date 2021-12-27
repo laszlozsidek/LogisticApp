@@ -86,9 +86,7 @@ public class TransportPlanController {
             milestoneService.saveMilestone(milestoneToSetConditionally);
         }
 
-        System.out.println(transportPlan.getPlannedIncome());
         transportPlan.setPlannedIncome(incomeService.getReducedIncome(transportPlan.getPlannedIncome(), delayInMinutes));
-        System.out.println(transportPlan.getPlannedIncome());
         return transportPlanMapper.transportPlanToDTO(transportPlanService.saveTransportPlan(transportPlan));
     }
 }
