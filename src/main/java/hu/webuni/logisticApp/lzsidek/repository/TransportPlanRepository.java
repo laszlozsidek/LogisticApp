@@ -13,4 +13,7 @@ public interface TransportPlanRepository extends JpaRepository<TransportPlan, Lo
     @Query("SELECT DISTINCT t FROM TransportPlan t LEFT JOIN FETCH t.sections WHERE t.id = :transportPlanId")
     Optional<TransportPlan> findById(@Param("transportPlanId") Long transportPlanId);
 
+//    @Override
+//    @EntityGraph("tp.with.sections")
+//    TransportPlan save(TransportPlan entity);
 }

@@ -1,11 +1,12 @@
 package hu.webuni.logisticApp.lzsidek.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
+//@NamedEntityGraph(
+//        name = "tp.with.sections",
+//        attributeNodes = @NamedAttributeNode("sections")
+//)
 @Entity
 public class TransportPlan {
     @Id
