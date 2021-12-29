@@ -1,6 +1,7 @@
 package hu.webuni.logisticApp.lzsidek.repository;
 
 import hu.webuni.logisticApp.lzsidek.model.TransportPlan;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +15,6 @@ public interface TransportPlanRepository extends JpaRepository<TransportPlan, Lo
     Optional<TransportPlan> findById(@Param("transportPlanId") Long transportPlanId);
 
 //    @Override
-//    @EntityGraph("tp.with.sections")
+//    @EntityGraph("tpSections")
 //    TransportPlan save(TransportPlan entity);
 }

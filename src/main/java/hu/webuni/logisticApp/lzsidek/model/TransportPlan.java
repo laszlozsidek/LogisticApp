@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 //@NamedEntityGraph(
-//        name = "tp.with.sections",
+//        name = "tpSections",
 //        attributeNodes = @NamedAttributeNode("sections")
 //)
 @Entity
