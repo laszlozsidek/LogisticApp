@@ -2,12 +2,14 @@ package hu.webuni.logisticApp.lzsidek.web;
 
 import hu.webuni.logisticApp.lzsidek.config.LogisticConfigProperties;
 import hu.webuni.logisticApp.lzsidek.dto.DelayDto;
+import hu.webuni.logisticApp.lzsidek.dto.LoginDto;
 import hu.webuni.logisticApp.lzsidek.model.Section;
 import hu.webuni.logisticApp.lzsidek.model.TransportPlan;
 import hu.webuni.logisticApp.lzsidek.service.MilestoneService;
 import hu.webuni.logisticApp.lzsidek.service.SectionService;
 import hu.webuni.logisticApp.lzsidek.service.TransportPlanService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,6 +42,22 @@ class TransportPlanControllerIT {
     @Autowired
     LogisticConfigProperties config;
 
+    private String jwt;
+
+    @BeforeEach
+    public void init() {
+        LoginDto body = new LoginDto();
+        body.setUsername("tmanager");
+        body.setPassword("pass");
+        jwt = webTestClient.post()
+                .uri("/api/login")
+                .bodyValue(body)
+                .exchange()
+                .expectBody(String.class)
+                .returnResult()
+                .getResponseBody();
+    }
+
     @Test
     void testThatNotExistingTransportPlanThrows404() {
         long notExistingTransportPlanId = 99L;
@@ -62,6 +80,7 @@ class TransportPlanControllerIT {
         webTestClient
                 .post()
                 .uri(BASE_URI + notExistingTransportPlanId + DELAY)
+                .headers(headers -> headers.setBearerAuth(jwt))
                 .bodyValue(delayDto)
                 .exchange()
                 .expectStatus()
@@ -90,6 +109,7 @@ class TransportPlanControllerIT {
         webTestClient
                 .post()
                 .uri(BASE_URI + existingTransportPlanId + DELAY)
+                .headers(headers -> headers.setBearerAuth(jwt))
                 .bodyValue(delayDto)
                 .exchange()
                 .expectStatus()
@@ -118,6 +138,7 @@ class TransportPlanControllerIT {
         List<TransportPlan> transportPlanList = webTestClient
                 .get()
                 .uri(BASE_URI + existingTransportPlanId)
+                .headers(headers -> headers.setBearerAuth(jwt))
                 .exchange()
                 .expectBodyList(TransportPlan.class)
                 .returnResult()
@@ -138,6 +159,7 @@ class TransportPlanControllerIT {
             webTestClient
                     .post()
                     .uri(BASE_URI + existingTransportPlanId + DELAY)
+                    .headers(headers -> headers.setBearerAuth(jwt))
                     .bodyValue(delayDto)
                     .exchange()
                     .expectStatus()
@@ -160,6 +182,7 @@ class TransportPlanControllerIT {
         webTestClient
                 .post()
                 .uri(BASE_URI + transportPlanId + DELAY)
+                .headers(headers -> headers.setBearerAuth(jwt))
                 .bodyValue(delayDto)
                 .exchange()
                 .expectStatus()
@@ -192,6 +215,7 @@ class TransportPlanControllerIT {
         webTestClient
                 .post()
                 .uri(BASE_URI + transportPlanId + DELAY)
+                .headers(headers -> headers.setBearerAuth(jwt))
                 .bodyValue(delayDto)
                 .exchange()
                 .expectStatus()
@@ -234,6 +258,7 @@ class TransportPlanControllerIT {
         webTestClient
                 .post()
                 .uri(BASE_URI + transportPlanId + DELAY)
+                .headers(headers -> headers.setBearerAuth(jwt))
                 .bodyValue(delayDto)
                 .exchange()
                 .expectStatus()
@@ -269,6 +294,7 @@ class TransportPlanControllerIT {
         webTestClient
                 .post()
                 .uri(BASE_URI + transportPlanId + DELAY)
+                .headers(headers -> headers.setBearerAuth(jwt))
                 .bodyValue(delayDto)
                 .exchange()
                 .expectStatus()
@@ -292,6 +318,7 @@ class TransportPlanControllerIT {
         webTestClient
                 .post()
                 .uri(BASE_URI + transportPlanId + DELAY)
+                .headers(headers -> headers.setBearerAuth(jwt))
                 .bodyValue(delayDto)
                 .exchange()
                 .expectStatus()
@@ -315,6 +342,7 @@ class TransportPlanControllerIT {
         webTestClient
                 .post()
                 .uri(BASE_URI + transportPlanId + DELAY)
+                .headers(headers -> headers.setBearerAuth(jwt))
                 .bodyValue(delayDto)
                 .exchange()
                 .expectStatus()
@@ -338,6 +366,7 @@ class TransportPlanControllerIT {
         webTestClient
                 .post()
                 .uri(BASE_URI + transportPlanId + DELAY)
+                .headers(headers -> headers.setBearerAuth(jwt))
                 .bodyValue(delayDto)
                 .exchange()
                 .expectStatus()
