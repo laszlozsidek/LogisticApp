@@ -55,21 +55,20 @@ public class TransportPlanController {
 
         boolean fromMilestoneFound = false;
         boolean toMilestoneFound = false;
-        Milestone milestoneToSet = null;
-        Milestone milestoneToSetConditionally = null;
+        Milestone currentMilestoneToSet = null;
+        Milestone nextMilestoneToSet = null;
         for (Section section : sectionService.findByTransportPlanId(id)) {
             if (section.getFromMilestone().getId().equals(milestoneId)) {
                 fromMilestoneFound = true;
-                milestoneToSet = section.getFromMilestone();
-                milestoneToSetConditionally = section.getToMilestone();
+                currentMilestoneToSet = section.getFromMilestone();
+                nextMilestoneToSet = section.getToMilestone();
                 break;
             }
             if (section.getToMilestone().getId().equals(milestoneId)) {
                 toMilestoneFound = true;
-                milestoneToSet = section.getToMilestone();
                 Optional<Section> nextSection = sectionService.findNextByTransportPlanIdAndNumber(id, section.getNumber() + 1);
                 if (nextSection.isPresent()) {
-                    milestoneToSetConditionally = nextSection.get().getFromMilestone();
+                    nextMilestoneToSet = nextSection.get().getFromMilestone();
                 }
                 break;
             }
@@ -78,12 +77,14 @@ public class TransportPlanController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        milestoneToSet.setPlannedTime(milestoneToSet.getPlannedTime().plusMinutes(delayInMinutes));
-        milestoneService.saveMilestone(milestoneToSet);
+        if (fromMilestoneFound) {
+            currentMilestoneToSet.setPlannedTime(currentMilestoneToSet.getPlannedTime().plusMinutes(delayInMinutes));
+            milestoneService.saveMilestone(currentMilestoneToSet);
+        }
 
-        if (milestoneToSetConditionally != null && !milestoneToSet.getId().equals(milestoneToSetConditionally.getId())) {
-            milestoneToSetConditionally.setPlannedTime(milestoneToSetConditionally.getPlannedTime().plusMinutes(delayInMinutes));
-            milestoneService.saveMilestone(milestoneToSetConditionally);
+        if (nextMilestoneToSet != null) {
+            nextMilestoneToSet.setPlannedTime(nextMilestoneToSet.getPlannedTime().plusMinutes(delayInMinutes));
+            milestoneService.saveMilestone(nextMilestoneToSet);
         }
 
         transportPlan.setPlannedIncome(incomeService.getReducedIncome(transportPlan.getPlannedIncome(), delayInMinutes));

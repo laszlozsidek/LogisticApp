@@ -3,6 +3,7 @@ package hu.webuni.logisticApp.lzsidek.web;
 import hu.webuni.logisticApp.lzsidek.config.LogisticConfigProperties;
 import hu.webuni.logisticApp.lzsidek.dto.DelayDto;
 import hu.webuni.logisticApp.lzsidek.dto.LoginDto;
+import hu.webuni.logisticApp.lzsidek.model.Milestone;
 import hu.webuni.logisticApp.lzsidek.model.Section;
 import hu.webuni.logisticApp.lzsidek.model.TransportPlan;
 import hu.webuni.logisticApp.lzsidek.service.MilestoneService;
@@ -168,14 +169,22 @@ class TransportPlanControllerIT {
     }
 
     @Test
-    void testThatDelayCanBeAddedToPlannedTime() {
+    void testThatDelayCanBeAddedToPlannedTimeIfFromMilestone() {
         long transportPlanId = 1L;
         long milestoneId = 1L;
         int delayInMinutes = 30;
 
-        LocalDateTime plannedTime = milestoneService.getMilestoneById(milestoneId)
-                .orElseGet(() -> Assertions.fail("Milestone with given ID not found"))
-                .getPlannedTime();
+        Milestone milestone = milestoneService.getMilestoneById(milestoneId)
+                .orElseGet(() -> Assertions.fail("Milestone with given ID not found"));
+
+        TransportPlan transportPlan = transportPlanService
+                .getTransportPlanById(transportPlanId)
+                .orElseGet(() -> Assertions.fail("TransportPlan with given ID not found"));
+        if (transportPlan.getSections().stream().noneMatch(e -> e.getFromMilestone().getId().equals(milestoneId))) {
+            Assertions.fail("Milestone is not a FromMilestone of TransportPlan");
+        }
+
+        LocalDateTime plannedTime = milestone.getPlannedTime();
 
         DelayDto delayDto = new DelayDto(milestoneId, delayInMinutes);
 
@@ -196,14 +205,19 @@ class TransportPlanControllerIT {
     }
 
     @Test
-    void testThatDelayIsAddedToPlannedTimeOfToMilestoneToo() {
+    void testThatDelayIsAddedToPlannedTimeOfToMilestoneTooIfFromMilestone() {
         long transportPlanId = 1L;
         long milestoneId = 1L;
         int delayInMinutes = 30;
 
-        Section section = transportPlanService
+        TransportPlan transportPlan = transportPlanService
                 .getTransportPlanById(transportPlanId)
-                .orElseGet(() -> Assertions.fail("TransportPlan with given ID not found"))
+                .orElseGet(() -> Assertions.fail("TransportPlan with given ID not found"));
+        if (transportPlan.getSections().stream().noneMatch(e -> e.getFromMilestone().getId().equals(milestoneId))) {
+            Assertions.fail("Milestone is not a FromMilestone of TransportPlan");
+        }
+
+        Section section = transportPlan
                 .getSections().stream().filter(e -> e.getFromMilestone().getId().equals(milestoneId))
                 .findFirst().orElseGet(() -> Assertions.fail("Milestone as FromMilestone not found in given transport plan"));
 
@@ -234,14 +248,19 @@ class TransportPlanControllerIT {
     }
 
     @Test
-    void testThatDelayIsAddedToPlannedTimeOfFromMilestoneToo() {
+    void testThatDelayIsOnlyAddedToPlannedTimeOfFromMilestoneIfToMilestone() {
         long transportPlanId = 1L;
         long milestoneId = 2L;
         int delayInMinutes = 30;
 
-        Section section = transportPlanService
+        TransportPlan transportPlan = transportPlanService
                 .getTransportPlanById(transportPlanId)
-                .orElseGet(() -> Assertions.fail("TransportPlan with given ID not found"))
+                .orElseGet(() -> Assertions.fail("TransportPlan with given ID not found"));
+        if (transportPlan.getSections().stream().noneMatch(e -> e.getToMilestone().getId().equals(milestoneId))) {
+            Assertions.fail("Milestone is not a ToMilestone of TransportPlan");
+        }
+
+        Section section = transportPlan
                 .getSections().stream().filter(e -> e.getToMilestone().getId().equals(milestoneId))
                 .findFirst().orElseGet(() -> Assertions.fail("Milestone as ToMilestone not found in given transport plan"));
 
@@ -277,7 +296,7 @@ class TransportPlanControllerIT {
         LocalDateTime modifiedPlannedTimeOfTo = section.getToMilestone().getPlannedTime();
         LocalDateTime modifiedPlannedTimeOfFrom = nextByTransportPlanIdAndNumber.getFromMilestone().getPlannedTime();
 
-        Assertions.assertEquals(plannedTimeOfTo.plusMinutes(delayInMinutes), modifiedPlannedTimeOfTo);
+        Assertions.assertEquals(plannedTimeOfTo, modifiedPlannedTimeOfTo);
         Assertions.assertEquals(plannedTimeOfFrom.plusMinutes(delayInMinutes), modifiedPlannedTimeOfFrom);
     }
 
